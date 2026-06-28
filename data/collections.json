@@ -1,0 +1,47 @@
+[
+  {
+    "id": "hidden-disney-2025-wave-a-dlr",
+    "title": "Hidden Disney 2025 Wave A — Disneyland Resort",
+    "shortTitle": "2025 Wave A",
+    "status": "active",
+    "region": "DLR",
+    "year": 2025,
+    "description": "Disneyland Resort Hidden Disney / Hidden Mickey 2025 Wave A set."
+  },
+  {
+    "id": "hidden-disney-2025-wave-b-dlr",
+    "title": "Hidden Disney 2025 Wave B — Disneyland Resort",
+    "shortTitle": "2025 Wave B",
+    "status": "placeholder",
+    "region": "DLR",
+    "year": 2025,
+    "description": "Ready for future Wave B data."
+  },
+  {
+    "id": "hidden-disney-2025-wave-c-dlr",
+    "title": "Hidden Disney 2025 Wave C — Disneyland Resort",
+    "shortTitle": "2025 Wave C",
+    "status": "placeholder",
+    "region": "DLR",
+    "year": 2025,
+    "description": "Ready for future Wave C data."
+  },
+  {
+    "id": "hidden-disney-2025-wave-d-dlr",
+    "title": "Hidden Disney 2025 Wave D — Disneyland Resort",
+    "shortTitle": "2025 Wave D",
+    "status": "placeholder",
+    "region": "DLR",
+    "year": 2025,
+    "description": "Ready for future Wave D data."
+  },
+  {
+    "id": "custom-collection",
+    "title": "Custom Pins",
+    "shortTitle": "Custom",
+    "status": "custom",
+    "region": "Personal",
+    "year": null,
+    "description": "Add personal, limited edition, and other trader pins later."
+  }
+]
