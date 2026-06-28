@@ -1,38 +1,64 @@
-# Disney Pin Tracker
+# Disney Pin Tracker v3
 
-Installable iPhone-friendly web app for Disney pin collecting.
+Polished installable iPhone-friendly Disney pin tracker.
 
-## Current contents
-- Hidden Disney 2025 Wave A — Disneyland Resort
-- Placeholder collection slots for Wave B, Wave C, Wave D, and custom pins
+## New in v3
 
-## Features
-- Owned / ISO / Trader status
-- Quantity tracking
-- Notes for purchase/trade source and condition
-- Overall and per-set progress
-- Search by pin, set, character/tag, chaser, or ID
-- Backup/restore JSON
-- Offline-capable PWA after first load
+- Automatic real image loading by pin ID
+- Full-screen image viewer
+- Polished card/grid layout
+- Better progress by set and overall
+- Trader mode, ISO mode, favorite mode
+- Expanded pin details:
+  - Quantity
+  - Date acquired
+  - Source
+  - Price
+  - Condition
+  - Trade value
+  - Notes
 - Light/dark theme
-- Future-proof data model so app updates should not wipe user progress
+- Backup/restore
+- Offline-capable PWA
+- Keeps the same local storage key as v2, so existing owned/ISO/trader data should persist
 
-## Publish with GitHub Pages
-1. Open this project folder on a PC.
-2. Upload all files and folders to the root of your GitHub repository:
-   - `index.html`
-   - `manifest.webmanifest`
-   - `service-worker.js`
-   - `data/`
-   - `icons/`
-   - `images/`
-   - `README.md`
-3. In GitHub: Settings → Pages.
-4. Source: Deploy from a branch.
-5. Branch: main. Folder: `/ root`.
-6. Save.
-7. Open the GitHub Pages URL in Safari on iPhone.
-8. Tap Share → Add to Home Screen.
+## Add real pin images
 
-## Updating future waves
-Add new pins to `data/pins.json` and add/update collection info in `data/collections.json`. Keep the same `collectionId` and pin `id` values once published so saved user data stays linked.
+Upload your own photos into:
+
+`images/pins/`
+
+Name each file by Pin ID:
+
+- `90912.jpg`
+- `90913.jpg`
+- `90968.jpg`
+
+Supported extensions:
+
+- `.jpg`
+- `.jpeg`
+- `.webp`
+- `.png`
+
+The app checks for images in this order:
+
+1. `images/pins/90912.jpg`
+2. `images/pins/90912.jpeg`
+3. `images/pins/90912.webp`
+4. `images/pins/90912.png`
+
+If no image exists, it uses a placeholder.
+
+## Update your GitHub Pages site
+
+Upload/replace:
+
+- `index.html`
+- `manifest.webmanifest`
+- `service-worker.js`
+- `data/`
+- `icons/`
+- `images/`
+
+Then wait a minute and refresh the app on your iPhone. If it does not update immediately, close the Home Screen app completely and reopen it, or open the GitHub Pages URL in Safari and refresh.

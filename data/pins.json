@@ -7,7 +7,8 @@
     "id": "90912",
     "icon": "🐸",
     "tags": [
-      "mr toad",
+      "mr",
+      "toad",
       "attraction",
       "25th"
     ]
@@ -44,7 +45,8 @@
     "id": "90915",
     "icon": "🍎",
     "tags": [
-      "snow white",
+      "snow",
+      "white",
       "princess",
       "25th"
     ]
@@ -57,7 +59,8 @@
     "id": "90916",
     "icon": "👻",
     "tags": [
-      "haunted mansion",
+      "haunted",
+      "mansion",
       "chaser",
       "25th"
     ]
@@ -145,7 +148,8 @@
     "icon": "🚢",
     "tags": [
       "mickey",
-      "steamboat willie",
+      "steamboat",
+      "willie",
       "chaser",
       "ears"
     ]
@@ -159,7 +163,8 @@
     "icon": "🏰",
     "tags": [
       "castle",
-      "super chaser",
+      "super",
+      "chaser",
       "ears"
     ]
   },
@@ -171,7 +176,8 @@
     "id": "90939",
     "icon": "🎶",
     "tags": [
-      "main street",
+      "main",
+      "street",
       "castle"
     ]
   },
@@ -231,7 +237,8 @@
     "id": "90944",
     "icon": "🐭",
     "tags": [
-      "ear hats",
+      "ear",
+      "hats",
       "chaser",
       "castle"
     ]
@@ -244,8 +251,12 @@
     "id": "90951",
     "icon": "🕯️",
     "tags": [
-      "beauty and the beast",
-      "disneyland d"
+      "beauty",
+      "and",
+      "the",
+      "beast",
+      "disneyland",
+      "d"
     ]
   },
   {
@@ -256,9 +267,14 @@
     "id": "90952",
     "icon": "🛢️",
     "tags": [
-      "nightmare before christmas",
-      "lock shock barrel",
-      "disneyland d"
+      "nightmare",
+      "before",
+      "christmas",
+      "lock",
+      "shock",
+      "barrel",
+      "disneyland",
+      "d"
     ]
   },
   {
@@ -270,7 +286,8 @@
     "icon": "🐰",
     "tags": [
       "oswald",
-      "disneyland d"
+      "disneyland",
+      "d"
     ]
   },
   {
@@ -283,7 +300,8 @@
     "tags": [
       "frozen",
       "anna",
-      "disneyland d"
+      "disneyland",
+      "d"
     ]
   },
   {
@@ -294,9 +312,11 @@
     "id": "90955",
     "icon": "🦁",
     "tags": [
-      "lion king",
+      "lion",
+      "king",
       "simba",
-      "disneyland d"
+      "disneyland",
+      "d"
     ]
   },
   {
@@ -309,7 +329,8 @@
     "tags": [
       "alice",
       "chaser",
-      "disneyland d"
+      "disneyland",
+      "d"
     ]
   },
   {
@@ -359,7 +380,8 @@
     "id": "90966",
     "icon": "🪐",
     "tags": [
-      "treasure planet",
+      "treasure",
+      "planet",
       "morph",
       "pink"
     ]
@@ -384,8 +406,10 @@
     "id": "90968",
     "icon": "🍬",
     "tags": [
-      "inside out",
-      "bing bong",
+      "inside",
+      "out",
+      "bing",
+      "bong",
       "chaser",
       "pink"
     ]
