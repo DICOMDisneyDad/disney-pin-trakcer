@@ -1,1 +1,40 @@
-const CACHE='disney-pin-tracker-v3-20260628';const ASSETS=['./','./index.html','./manifest.webmanifest','./data/pins.json','./data/collections.json','./icons/icon-192.svg','./icons/icon-512.svg','./icons/apple-touch-icon.svg'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(u.pathname.includes('/images/pins/')){e.respondWith(fetch(e.request).catch(()=>new Response('',{status:404})));return;}e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));});
+const CACHE_NAME = "thecase-v1";
+const CORE_ASSETS = ["./", "./index.html", "./manifest.webmanifest"];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(CORE_ASSETS)).catch(() => {})
+  );
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) =>
+      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
+    )
+  );
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
+  // Never intercept Airtable API calls — always go to network.
+  if (url.hostname.includes("airtable.com")) return;
+  if (event.request.method !== "GET") return;
+
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      const networkFetch = fetch(event.request)
+        .then((response) => {
+          if (response && response.ok && url.origin === self.location.origin) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
+          }
+          return response;
+        })
+        .catch(() => cached);
+      return cached || networkFetch;
+    })
+  );
+});

@@ -1,25 +1,25 @@
 {
-  "name": "Disney Pin Tracker",
-  "short_name": "Pin Tracker",
-  "description": "Installable Disney pin collection, trader, and ISO tracker.",
+  "name": "The Case — Disney Pin Tracker",
+  "short_name": "The Case",
+  "description": "Track your Disney pin trading collection.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#120c22",
+  "theme_color": "#1b1330",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icons/icon-192.svg",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236c4fd6'/%3E%3Ccircle cx='50' cy='30' r='16' fill='%23ffd166'/%3E%3Ccircle cx='30' cy='16' r='9' fill='%23ffd166'/%3E%3Ccircle cx='70' cy='16' r='9' fill='%23ffd166'/%3E%3C/svg%3E",
       "sizes": "192x192",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "icons/icon-512.svg",
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236c4fd6'/%3E%3Ccircle cx='50' cy='30' r='16' fill='%23ffd166'/%3E%3Ccircle cx='30' cy='16' r='9' fill='%23ffd166'/%3E%3Ccircle cx='70' cy='16' r='9' fill='%23ffd166'/%3E%3C/svg%3E",
       "sizes": "512x512",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }

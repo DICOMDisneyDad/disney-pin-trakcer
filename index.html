@@ -1,46 +1,683 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Pin Tracker"><meta name="theme-color" content="#0f172a">
-<link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons/apple-touch-icon.svg"><title>Disney Pin Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Case — Disney Pin Tracker</title>
+<meta name="theme-color" content="#1b1330">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236c4fd6'/%3E%3Ccircle cx='50' cy='30' r='16' fill='%23ffd166'/%3E%3Ccircle cx='30' cy='16' r='9' fill='%23ffd166'/%3E%3Ccircle cx='70' cy='16' r='9' fill='%23ffd166'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236c4fd6'/%3E%3Ccircle cx='50' cy='30' r='16' fill='%23ffd166'/%3E%3Ccircle cx='30' cy='16' r='9' fill='%23ffd166'/%3E%3Ccircle cx='70' cy='16' r='9' fill='%23ffd166'/%3E%3C/svg%3E">
 <style>
-:root{--bg:#0b1020;--card:#172033;--card2:#202b42;--text:#f8fafc;--muted:#b9c5d6;--line:rgba(255,255,255,.13);--blue:#60a5fa;--green:#34d399;--yellow:#fbbf24;--purple:#c084fc;--pink:#f472b6;--shadow:0 18px 50px rgba(0,0,0,.32)}
-.light{--bg:#f8fafc;--card:#fff;--card2:#eef2ff;--text:#0f172a;--muted:#475569;--line:rgba(15,23,42,.14);--blue:#2563eb;--green:#059669;--yellow:#d97706;--purple:#7c3aed;--pink:#db2777;--shadow:0 14px 35px rgba(15,23,42,.12)}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}body{padding-bottom:104px}button,input,select,textarea{font-family:inherit}
-header{position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg),color-mix(in srgb,var(--bg) 92%,transparent));backdrop-filter:blur(18px);padding:14px;border-bottom:1px solid var(--line)}.topline{display:flex;justify-content:space-between;gap:8px}h1{margin:0;font-size:24px;line-height:1.03;letter-spacing:-.04em}.subtitle{font-size:13px;color:var(--muted);margin-top:4px}.gear{border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--text);border-radius:15px;padding:10px 12px;font-weight:950}
-.hero{margin-top:12px;border:1px solid var(--line);border-radius:22px;padding:12px;background:linear-gradient(135deg,rgba(96,165,250,.17),rgba(244,114,182,.14));box-shadow:var(--shadow)}.stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.stat{background:rgba(255,255,255,.075);border:1px solid var(--line);border-radius:16px;padding:10px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:var(--muted)}.progress{height:12px;background:rgba(255,255,255,.13);border-radius:999px;overflow:hidden;margin-top:10px}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--blue),var(--pink));transition:.25s}
-.controls{padding:12px 14px 6px;display:grid;gap:9px}.search,.collection-select{font-size:16px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.08);color:var(--text);padding:12px;outline:none}.tabs{display:flex;gap:8px;overflow:auto;padding-bottom:4px}.tab{flex:0 0 auto;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.08);color:var(--text);font-weight:950;padding:10px 13px}.tab.active{background:var(--blue);color:#07111f}
-main{padding:0 14px 20px}.help{padding:0 14px 6px;color:var(--muted);font-size:13px;line-height:1.35}.progress-list{display:grid;gap:8px;margin:8px 0 14px}.set-progress{border:1px solid var(--line);border-radius:16px;padding:10px;background:rgba(255,255,255,.055)}.set-row{display:flex;justify-content:space-between;font-size:13px;font-weight:900}.mini{height:8px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden;margin-top:7px}.mini div{height:100%;background:linear-gradient(90deg,var(--green),var(--blue))}
-.grid{display:grid;grid-template-columns:1fr;gap:10px}.section-title{margin:18px 3px 8px;font-size:19px;font-weight:950;letter-spacing:-.02em;display:flex;justify-content:space-between}.section-count{font-size:13px;color:var(--muted)}
-.pin{border:1px solid var(--line);border-radius:23px;background:var(--card);overflow:hidden;box-shadow:0 1px 0 rgba(255,255,255,.02)}.pin.owned{border-color:rgba(52,211,153,.75);box-shadow:0 0 0 1px rgba(52,211,153,.25) inset}.pin.favorite{border-color:rgba(251,191,36,.8)}.pinhead{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:12px}.art{width:92px;height:92px;border-radius:21px;background:var(--card2);display:flex;align-items:center;justify-content:center;font-size:41px;overflow:hidden}.art img{width:100%;height:100%;object-fit:cover}.art .missing{font-size:11px;text-align:center;color:var(--muted);padding:6px;line-height:1.15}.title{font-size:17px;font-weight:950;line-height:1.14}.meta{margin-top:4px;color:var(--muted);font-size:12px}.badge{display:inline-block;margin:4px 4px 0 0;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:950}.Common{background:rgba(96,165,250,.18);color:#bfdbfe}.Chaser{background:rgba(251,191,36,.22);color:#fde68a}.SuperChaser{background:rgba(192,132,252,.22);color:#e9d5ff}.owned-badge{background:rgba(52,211,153,.22);color:#bbf7d0}.need-badge{background:rgba(251,191,36,.22);color:#fde68a}.trade-badge{background:rgba(192,132,252,.22);color:#e9d5ff}
-.bigbuttons{display:grid;grid-template-columns:1fr 1fr 1fr 48px;gap:8px;padding:0 12px 12px}.bigbuttons button{min-height:48px;border-radius:15px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--text);font-weight:950;font-size:14px}.bigbuttons button.on.ownedbtn{background:rgba(52,211,153,.24);border-color:var(--green)}.bigbuttons button.on.needbtn{background:rgba(251,191,36,.22);border-color:var(--yellow)}.bigbuttons button.on.tradebtn{background:rgba(192,132,252,.24);border-color:var(--purple)}.bigbuttons button.on.favbtn{background:rgba(251,191,36,.22);border-color:var(--yellow)}
-.details{display:none;border-top:1px solid var(--line);padding:12px}.pin.expanded .details{display:block}.fieldgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field{display:grid;gap:5px}.field.full{grid-column:1/-1}.field label{font-size:12px;color:var(--muted);font-weight:900}input,textarea,select{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.08);color:var(--text);padding:10px;font-size:15px}textarea{min-height:56px;resize:vertical}
-.empty,.placeholder{text-align:center;color:var(--muted);padding:28px 12px;border:1px dashed var(--line);border-radius:20px;margin-top:12px;line-height:1.35}footer{position:fixed;left:0;right:0;bottom:0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;z-index:20}footer button{border:1px solid var(--line);background:rgba(255,255,255,.09);color:var(--text);border-radius:16px;padding:12px 5px;font-weight:950;font-size:13px}
-.drawer{position:fixed;inset:auto 0 0 0;z-index:50;background:var(--card);border-top:1px solid var(--line);border-radius:24px 24px 0 0;padding:16px 14px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -20px 50px rgba(0,0,0,.35);display:none}.drawer.open{display:block}.drawer h2{margin:0 0 8px}.drawer p{color:var(--muted);font-size:14px;line-height:1.35}.drawer-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.drawer button{border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--text);border-radius:14px;padding:12px;font-weight:900}
-.viewer{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}.viewer.open{display:flex}.viewer-card{max-width:720px;width:100%;text-align:center;color:white}.viewer-art{width:min(88vw,560px);height:min(88vw,560px);margin:0 auto;border-radius:28px;background:#111827;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:120px}.viewer-art img{width:100%;height:100%;object-fit:contain}.viewer h2{margin:16px 0 4px}.viewer p{color:#d1d5db;margin:0 0 14px}.viewer button{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:white;border-radius:16px;padding:12px 18px;font-weight:900}
-@media(min-width:720px){.grid{grid-template-columns:1fr 1fr}.progress-list{grid-template-columns:1fr 1fr}.pinhead{grid-template-columns:110px 1fr}.art{width:110px;height:110px}}@media(min-width:920px){body{max-width:920px;margin:0 auto}footer{max-width:920px;margin:0 auto}.drawer{max-width:920px;margin:0 auto}}
-</style></head>
+:root{
+  --bg:#120c22;
+  --bg-elevated:#1c1436;
+  --card:#221a42;
+  --card-border:#332a5c;
+  --text:#f2eefb;
+  --text-dim:#a79ecb;
+  --accent:#8b6bf0;
+  --accent-2:#ffd166;
+  --owned:#4ade80;
+  --needed:#f472b6;
+  --danger:#f87171;
+  --radius:16px;
+  --safe-top:env(safe-area-inset-top);
+  --safe-bottom:env(safe-area-inset-bottom);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+body{
+  min-height:100vh;
+  padding-bottom:calc(78px + var(--safe-bottom));
+  background:
+    radial-gradient(circle at 10% 0%, rgba(139,107,240,0.25), transparent 45%),
+    radial-gradient(circle at 90% 10%, rgba(255,209,102,0.12), transparent 40%),
+    var(--bg);
+}
+header.topbar{
+  position:sticky; top:0; z-index:20;
+  padding:calc(14px + var(--safe-top)) 16px 12px;
+  background:rgba(18,12,34,0.85);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--card-border);
+}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,var(--accent),#5a3fc0);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 4px 14px rgba(139,107,240,0.4);}
+.brand h1{font-size:17px;margin:0;font-weight:700;letter-spacing:0.2px;}
+.brand small{display:block;color:var(--text-dim);font-size:11px;font-weight:500;}
+.icon-btn{
+  width:38px;height:38px;border-radius:12px;border:1px solid var(--card-border);
+  background:var(--card); color:var(--text); font-size:18px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+}
+.icon-btn:active{transform:scale(0.94);}
+
+.progress-wrap{margin-top:14px;}
+.progress-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px;}
+.progress-bar{height:8px;border-radius:99px;background:rgba(255,255,255,0.08);overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--owned),#22c55e);border-radius:99px;transition:width .4s ease;}
+
+.search-row{margin-top:12px;display:flex;gap:8px;}
+.search-box{
+  flex:1;display:flex;align-items:center;gap:8px;background:var(--card);
+  border:1px solid var(--card-border);border-radius:12px;padding:9px 12px;
+}
+.search-box input{
+  flex:1;border:none;background:transparent;color:var(--text);font-size:15px;outline:none;
+}
+.search-box input::placeholder{color:var(--text-dim);}
+
+.filter-row{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.filter-row::-webkit-scrollbar{display:none;}
+.chip{
+  flex:none;padding:7px 14px;border-radius:99px;font-size:13px;font-weight:600;
+  background:var(--card);border:1px solid var(--card-border);color:var(--text-dim);cursor:pointer;white-space:nowrap;
+}
+.chip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+main{padding:16px;max-width:720px;margin:0 auto;}
+.set-group{margin-bottom:22px;}
+.set-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;padding:0 2px;
+}
+.set-header h2{font-size:15px;margin:0;font-weight:700;color:var(--text);}
+.set-count{font-size:12px;color:var(--text-dim);font-weight:600;background:rgba(255,255,255,0.06);padding:3px 9px;border-radius:99px;}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+@media (min-width:480px){.grid{grid-template-columns:repeat(3,1fr);}}
+
+.pin-card{
+  background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);
+  overflow:hidden;position:relative;cursor:pointer;transition:transform .15s ease, border-color .15s ease;
+}
+.pin-card:active{transform:scale(0.97);}
+.pin-photo{
+  width:100%;aspect-ratio:1/1;background:linear-gradient(145deg,#2a2050,#1a1436);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;
+}
+.pin-photo img{width:100%;height:100%;object-fit:cover;display:block;}
+.pin-photo .placeholder{font-size:26px;opacity:0.35;}
+.status-dot{
+  position:absolute;top:8px;right:8px;width:11px;height:11px;border-radius:50%;
+  box-shadow:0 0 0 3px rgba(0,0,0,0.35);
+}
+.status-dot.owned{background:var(--owned);}
+.status-dot.needed{background:var(--needed);}
+.pin-info{padding:9px 10px 11px;}
+.pin-name{font-size:13px;font-weight:600;line-height:1.25;margin:0 0 3px;color:var(--text);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.pin-backer{font-size:11px;color:var(--text-dim);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.empty-state, .loading-state{
+  text-align:center;padding:60px 20px;color:var(--text-dim);
+}
+.empty-state .big{font-size:38px;margin-bottom:10px;}
+.spinner{
+  width:28px;height:28px;border-radius:50%;border:3px solid var(--card-border);
+  border-top-color:var(--accent);animation:spin 0.8s linear infinite;margin:0 auto 14px;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+nav.tabbar{
+  position:fixed;bottom:0;left:0;right:0;z-index:20;
+  display:flex;justify-content:space-around;
+  background:rgba(18,12,34,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--card-border);
+  padding:10px 8px calc(10px + var(--safe-bottom));
+}
+.tab{
+  display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--text-dim);
+  font-size:11px;font-weight:600;background:none;border:none;cursor:pointer;flex:1;
+}
+.tab .ic{font-size:19px;}
+.tab.active{color:var(--accent-2);}
+
+.sheet-backdrop{
+  position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:50;
+  opacity:0;pointer-events:none;transition:opacity .2s ease;
+}
+.sheet-backdrop.open{opacity:1;pointer-events:auto;}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;z-index:51;
+  background:var(--bg-elevated);border-radius:20px 20px 0 0;
+  border-top:1px solid var(--card-border);
+  padding:18px 18px calc(22px + var(--safe-bottom));
+  max-height:88vh;overflow-y:auto;
+  transform:translateY(100%);transition:transform .25s cubic-bezier(.32,.72,0,1);
+}
+.sheet.open{transform:translateY(0);}
+.sheet-handle{width:38px;height:4px;background:var(--card-border);border-radius:99px;margin:0 auto 16px;}
+.sheet h3{margin:0 0 4px;font-size:19px;}
+.sheet .sub{color:var(--text-dim);font-size:13px;margin-bottom:16px;}
+.sheet-photo{width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:linear-gradient(145deg,#2a2050,#1a1436);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
+.sheet-photo img{width:100%;height:100%;object-fit:cover;}
+.sheet-photo .placeholder{font-size:44px;opacity:0.3;}
+.field-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--card-border);font-size:14px;}
+.field-row:last-of-type{border-bottom:none;}
+.field-row .label{color:var(--text-dim);}
+.field-row .val{font-weight:600;text-align:right;max-width:60%;}
+.notes-box{margin-top:14px;padding:12px;background:var(--card);border-radius:12px;font-size:13px;color:var(--text-dim);line-height:1.5;}
+.status-toggle{display:flex;gap:8px;margin-top:16px;}
+.status-btn{
+  flex:1;padding:12px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);
+  color:var(--text);font-size:14px;font-weight:700;cursor:pointer;
+}
+.status-btn.owned-btn.active{background:var(--owned);border-color:var(--owned);color:#08240f;}
+.status-btn.needed-btn.active{background:var(--needed);border-color:var(--needed);color:#3a0621;}
+
+.settings-form label{display:block;font-size:12px;font-weight:700;color:var(--text-dim);margin:14px 0 6px;text-transform:uppercase;letter-spacing:0.4px;}
+.settings-form input, .settings-form textarea{
+  width:100%;padding:12px 13px;border-radius:12px;border:1px solid var(--card-border);
+  background:var(--card);color:var(--text);font-size:14px;outline:none;font-family:inherit;
+}
+.settings-form input:focus, .settings-form textarea:focus{border-color:var(--accent);}
+.btn-primary{
+  width:100%;margin-top:18px;padding:13px;border-radius:12px;border:none;
+  background:linear-gradient(135deg,var(--accent),#5a3fc0);color:#fff;font-size:15px;font-weight:700;cursor:pointer;
+}
+.btn-secondary{
+  width:100%;margin-top:10px;padding:12px;border-radius:12px;border:1px solid var(--card-border);
+  background:transparent;color:var(--text-dim);font-size:14px;font-weight:600;cursor:pointer;
+}
+.help-text{font-size:12px;color:var(--text-dim);margin-top:6px;line-height:1.5;}
+.help-text a{color:var(--accent-2);}
+.toast{
+  position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#111;color:#fff;padding:11px 18px;border-radius:99px;font-size:13px;font-weight:600;
+  z-index:60;opacity:0;transition:all .25s ease;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,0.4);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
 <body>
-<header><div class="topline"><div><h1>Disney Pin Tracker</h1><div class="subtitle" id="subtitle">Loading collection…</div></div><button class="gear" onclick="openSettings()">⚙︎</button></div><div class="hero"><div class="stats"><div class="stat"><b id="ownedNum">0</b><span>owned</span></div><div class="stat"><b id="needNum">0</b><span>ISO / need</span></div><div class="stat"><b id="tradeNum">0</b><span>traders</span></div></div><div class="progress"><div id="bar" class="bar"></div></div></div></header>
-<section class="controls"><select class="collection-select" id="collectionSelect"></select><input id="search" class="search" placeholder="Search pin, character, set, chaser, ID…" autocomplete="off"><div class="tabs"><button class="tab active" data-filter="all">All</button><button class="tab" data-filter="need">ISO</button><button class="tab" data-filter="owned">Owned</button><button class="tab" data-filter="trader">Traders</button><button class="tab" data-filter="chaser">Chasers</button><button class="tab" data-filter="favorite">Favorites</button></div></section>
-<div class="help">Tap a pin image to enlarge. Tap anywhere on a pin card to open extra details like date acquired, source, price, condition, value, and notes.</div><main id="app"></main>
-<footer><button onclick="setMode('all')">All</button><button onclick="setMode('trader')">Trade</button><button onclick="setMode('need')">ISO</button><button onclick="backup()">Backup</button><input id="restore" type="file" accept="application/json" style="display:none"></footer>
-<div class="drawer" id="drawer"><h2>Settings</h2><p><b>Images:</b> upload photos as <code>images/pins/90912.jpg</code>, <code>images/pins/90912.webp</code>, or <code>images/pins/90912.png</code>. The app loads them automatically by pin ID.</p><div class="drawer-grid"><button onclick="toggleTheme()">Light/Dark</button><button onclick="markMissingNeed()">Need Missing</button><button onclick="document.getElementById('restore').click()">Restore Backup</button><button onclick="closeSettings()">Close</button></div></div>
-<div class="viewer" id="viewer" onclick="closeViewer(event)"><div class="viewer-card"><div class="viewer-art" id="viewerArt"></div><h2 id="viewerTitle"></h2><p id="viewerMeta"></p><button onclick="closeViewer(event)">Close</button></div></div>
+
+<header class="topbar">
+  <div class="topbar-row">
+    <div class="brand">
+      <div class="brand-mark">🏷️</div>
+      <div>
+        <h1>The Case</h1>
+        <small id="subtitle">Disney Pin Collection</small>
+      </div>
+    </div>
+    <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙️</button>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-labels">
+      <span id="progressLabel">0 of 0 owned</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="search-row">
+    <div class="search-box">
+      <span>🔍</span>
+      <input type="text" id="searchInput" placeholder="Search pins or sets…">
+    </div>
+  </div>
+
+  <div class="filter-row" id="filterRow">
+    <div class="chip active" data-filter="all">All</div>
+    <div class="chip" data-filter="needed">Needed</div>
+    <div class="chip" data-filter="owned">Owned</div>
+  </div>
+</header>
+
+<main id="mainContent">
+  <div class="loading-state" id="loadingState">
+    <div class="spinner"></div>
+    <div>Loading your collection…</div>
+  </div>
+</main>
+
+<nav class="tabbar">
+  <button class="tab active" data-view="all"><span class="ic">🗂️</span>All Pins</button>
+  <button class="tab" data-view="sets"><span class="ic">📦</span>By Set</button>
+  <button class="tab" data-view="stats"><span class="ic">📊</span>Stats</button>
+</nav>
+
+<div class="sheet-backdrop" id="detailBackdrop"></div>
+<div class="sheet" id="detailSheet">
+  <div class="sheet-handle"></div>
+  <div id="detailContent"></div>
+</div>
+
+<div class="sheet-backdrop" id="settingsBackdrop"></div>
+<div class="sheet" id="settingsSheet">
+  <div class="sheet-handle"></div>
+  <h3>⚙️ Settings</h3>
+  <div class="sub">Connect your Airtable base to sync pins.</div>
+  <div class="settings-form">
+    <label>Personal Access Token</label>
+    <input type="password" id="patInput" placeholder="pat••••••••••••••••">
+    <label>Base ID</label>
+    <input type="text" id="baseIdInput" placeholder="appXXXXXXXXXXXXXX">
+    <label>Table Name</label>
+    <input type="text" id="tableNameInput" placeholder="Pins">
+    <div class="help-text">
+      Your token is stored only in this browser (localStorage) and sent directly to Airtable's API — never through a third-party server.
+      Create a token at <a href="https://airtable.com/create/tokens" target="_blank">airtable.com/create/tokens</a> with <code>data.records:read</code> and <code>data.records:write</code> scopes on this base.
+    </div>
+    <button class="btn-primary" id="saveSettingsBtn">Save &amp; Sync</button>
+    <button class="btn-secondary" id="clearSettingsBtn">Clear Saved Token</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
-let PINS=[],COLLECTIONS=[],filter="all",selectedCollection="hidden-disney-2025-wave-a-dlr";const KEY="disney_pin_tracker_user_data_v2",THEMEKEY="disney_pin_tracker_theme";let state=JSON.parse(localStorage.getItem(KEY)||"{}");if(localStorage.getItem(THEMEKEY)==="light")document.documentElement.classList.add("light");
-async function init(){[PINS,COLLECTIONS]=await Promise.all([fetch("./data/pins.json").then(r=>r.json()),fetch("./data/collections.json").then(r=>r.json())]);const saved=localStorage.getItem("selected_collection");if(saved)selectedCollection=saved;setupCollections();if("serviceWorker"in navigator)navigator.serviceWorker.register("./service-worker.js").catch(()=>{});render()}
-function setupCollections(){const sel=document.getElementById("collectionSelect");sel.innerHTML="";COLLECTIONS.forEach(c=>{const o=document.createElement("option");o.value=c.id;o.textContent=c.shortTitle+(c.status==="placeholder"?" — coming soon":"");sel.appendChild(o)});sel.value=selectedCollection;sel.onchange=e=>{selectedCollection=e.target.value;localStorage.setItem("selected_collection",selectedCollection);render()}}
-function cleanType(t){return t.replace(/\s/g,"")}function key(p){return"pin_"+p.collectionId+"_"+p.id}function get(p){return Object.assign({owned:false,need:false,trader:false,qty:0,notes:"",favorite:false,acquiredDate:"",source:"",price:"",condition:"",value:""},state[key(p)]||{})}function save(p,patch,skip=false){state[key(p)]=Object.assign(get(p),patch);localStorage.setItem(KEY,JSON.stringify(state));if(!skip)render()}function activePins(){return PINS.filter(p=>p.collectionId===selectedCollection)}function grouped(list){const g={};for(const p of list)(g[p.set] ||= []).push(p);return g}function imageCandidates(p){return[`images/pins/${p.id}.jpg`,`images/pins/${p.id}.jpeg`,`images/pins/${p.id}.webp`,`images/pins/${p.id}.png`]}
-function matches(p){const s=get(p),q=document.getElementById("search").value.toLowerCase().trim(),hay=`${p.name} ${p.set} ${p.type} ${p.id} ${(p.tags||[]).join(" ")}`.toLowerCase();if(q&&!hay.includes(q))return false;if(filter==="owned"&&!s.owned)return false;if(filter==="need"&&!s.need)return false;if(filter==="trader"&&!s.trader)return false;if(filter==="chaser"&&!p.type.includes("Chaser"))return false;if(filter==="favorite"&&!s.favorite)return false;return true}
-function setMode(m){filter=m;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.filter===m));render()}
-function render(){const coll=COLLECTIONS.find(c=>c.id===selectedCollection),pins=activePins(),app=document.getElementById("app");document.getElementById("subtitle").textContent=coll?coll.title:"Disney pin collection";if(!pins.length){ownedNum.textContent="0/0";needNum.textContent="0";tradeNum.textContent="0";bar.style.width="0%";app.innerHTML=`<div class="placeholder"><b>${coll?.title||"Collection"}</b><br>${coll?.description||"Ready for pins."}<br><br>This slot is ready for a future update.</div>`;return}const owned=pins.filter(p=>get(p).owned).length,need=pins.filter(p=>get(p).need).length,trade=pins.filter(p=>get(p).trader).length;ownedNum.textContent=owned+"/"+pins.length;needNum.textContent=need;tradeNum.textContent=trade;bar.style.width=Math.round(owned/pins.length*100)+"%";const list=pins.filter(matches);app.innerHTML=progressHTML(pins);if(!list.length){app.innerHTML+='<div class="empty">No matching pins.</div>';return}for(const [setName,setPins]of Object.entries(grouped(list))){const all=pins.filter(p=>p.set===setName),ownedSet=all.filter(p=>get(p).owned).length;const h=document.createElement("div");h.className="section-title";h.innerHTML=`<span>${setName}</span><span class="section-count">${ownedSet}/${all.length}</span>`;app.appendChild(h);const grid=document.createElement("div");grid.className="grid";setPins.forEach(p=>grid.appendChild(pinCard(p)));app.appendChild(grid)}hydrateImages()}
-function progressHTML(pins){const sets=[...new Set(pins.map(p=>p.set))];return`<div class="progress-list">${sets.map(setName=>{const all=pins.filter(p=>p.set===setName),n=all.filter(p=>get(p).owned).length,pct=all.length?Math.round(n/all.length*100):0;return`<div class="set-progress"><div class="set-row"><span>${setName}</span><span>${n}/${all.length}</span></div><div class="mini"><div style="width:${pct}%"></div></div></div>`}).join("")}</div>`}
-function pinCard(p){const s=get(p),div=document.createElement("div");div.className="pin"+(s.owned?" owned":"")+(s.favorite?" favorite":"");const badges=`<span class="badge ${cleanType(p.type)}">${p.type}</span>${s.owned?'<span class="badge owned-badge">Owned</span>':''}${s.need?'<span class="badge need-badge">ISO</span>':''}${s.trader?'<span class="badge trade-badge">Trader</span>':''}`;div.innerHTML=`<div class="pinhead"><div class="art" data-imgid="${p.id}" onclick="openViewer('${p.id}')"><span>${p.icon}</span></div><div><div class="title">${p.name}</div><div>${badges}</div><div class="meta">${p.set} • ID ${p.id}</div></div></div><div class="bigbuttons"><button class="ownedbtn ${s.owned?'on':''}" data-a="owned">${s.owned?'✓ Owned':'Owned'}</button><button class="needbtn ${s.need?'on':''}" data-a="need">${s.need?'✓ ISO':'ISO'}</button><button class="tradebtn ${s.trader?'on':''}" data-a="trader">${s.trader?'✓ Trader':'Trader'}</button><button class="favbtn ${s.favorite?'on':''}" data-a="favorite">★</button></div><div class="details"><div class="fieldgrid"><div class="field"><label>Quantity</label><input class="qty" inputmode="numeric" type="number" min="0" value="${s.qty||0}"></div><div class="field"><label>Date acquired</label><input class="date" type="date" value="${s.acquiredDate||""}"></div><div class="field"><label>Source</label><input class="source" value="${escapeHtml(s.source||"")}" placeholder="Westward Ho, trade…"></div><div class="field"><label>Price</label><input class="price" inputmode="decimal" value="${escapeHtml(s.price||"")}" placeholder="$"></div><div class="field"><label>Condition</label><input class="condition" value="${escapeHtml(s.condition||"")}" placeholder="New, traded, flaw…"></div><div class="field"><label>Trade value</label><input class="value" value="${escapeHtml(s.value||"")}" placeholder="Optional"></div><div class="field full"><label>Notes</label><textarea placeholder="Trade details, authenticity, board location, etc.">${escapeHtml(s.notes||"")}</textarea></div></div></div>`;div.onclick=e=>{if(e.target.closest("button,input,textarea,.art"))return;div.classList.toggle("expanded")};div.querySelector('[data-a="owned"]').onclick=()=>{const val=!get(p).owned;save(p,{owned:val,need:val?false:get(p).need,qty:val&&!get(p).qty?1:get(p).qty})};div.querySelector('[data-a="need"]').onclick=()=>save(p,{need:!get(p).need});div.querySelector('[data-a="trader"]').onclick=()=>save(p,{trader:!get(p).trader});div.querySelector('[data-a="favorite"]').onclick=()=>save(p,{favorite:!get(p).favorite});const map={".qty":"qty",".date":"acquiredDate",".source":"source",".price":"price",".condition":"condition",".value":"value","textarea":"notes"};Object.entries(map).forEach(([sel,field])=>{const el=div.querySelector(sel);el.onchange=el.oninput=e=>{let v=e.target.value;if(field==="qty")v=Number(v||0);const patch={[field]:v};if(field==="qty"&&v>0)patch.owned=true;save(p,patch,true)}});return div}
-function hydrateImages(){document.querySelectorAll("[data-imgid]").forEach(el=>{const p=PINS.find(x=>x.id===el.dataset.imgid);if(!p)return;const cand=imageCandidates(p);let idx=0;const img=new Image();img.alt=p.name;img.onload=()=>{el.innerHTML="";el.appendChild(img);el.dataset.src=img.src};img.onerror=()=>{idx++;if(idx<cand.length)img.src=cand[idx];else el.innerHTML=`<div class="missing">${p.icon}<br>${p.name}</div>`};img.src=cand[0]})}
-function openViewer(id){const p=PINS.find(x=>x.id===id);if(!p)return;viewer.classList.add("open");viewerTitle.textContent=p.name;viewerMeta.textContent=`${p.set} • ${p.type} • ID ${p.id}`;viewerArt.innerHTML=`<span>${p.icon}</span>`;const cand=imageCandidates(p);let idx=0;const img=new Image();img.alt=p.name;img.onload=()=>{viewerArt.innerHTML="";viewerArt.appendChild(img)};img.onerror=()=>{idx++;if(idx<cand.length)img.src=cand[idx]};img.src=cand[0]}
-function closeViewer(e){if(e)e.stopPropagation();viewer.classList.remove("open")}function escapeHtml(str){return String(str).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-document.getElementById("search").oninput=render;document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>setMode(b.dataset.filter));function markMissingNeed(){activePins().forEach(p=>{const s=get(p);if(!s.owned)state[key(p)]=Object.assign(s,{need:true})});localStorage.setItem(KEY,JSON.stringify(state));render()}function backup(){const blob=new Blob([JSON.stringify({version:3,date:new Date().toISOString(),state},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="disney-pin-tracker-backup.json";a.click();URL.revokeObjectURL(a.href)}
-restore.onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{const j=JSON.parse(r.result);state=j.state||j;localStorage.setItem(KEY,JSON.stringify(state));render();alert("Restored.")}catch(err){alert("Could not restore backup.")}};r.readAsText(f)};function openSettings(){drawer.classList.add("open")}function closeSettings(){drawer.classList.remove("open")}function toggleTheme(){document.documentElement.classList.toggle("light");localStorage.setItem(THEMEKEY,document.documentElement.classList.contains("light")?"light":"dark")}init();
-</script></body></html>
+(function(){
+  "use strict";
+
+  const CONFIG_KEY = "thecase_config_v1";
+  const CACHE_KEY = "thecase_cache_v1";
+  let records = [];
+  let currentFilter = "all";
+  let currentView = "all";
+  let searchQuery = "";
+  let activeRecord = null;
+
+  const $ = (sel) => document.querySelector(sel);
+  const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+  function getConfig(){
+    try { return JSON.parse(localStorage.getItem(CONFIG_KEY)) || {}; }
+    catch(e){ return {}; }
+  }
+  function setConfig(cfg){ localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg)); }
+
+  function showToast(msg, ms){
+    const t = $("#toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._timer);
+    t._timer = setTimeout(()=>t.classList.remove("show"), ms || 2200);
+  }
+
+  // ---------- Airtable API ----------
+  function airtableHeaders(cfg){
+    return { "Authorization": "Bearer " + cfg.pat, "Content-Type": "application/json" };
+  }
+
+  async function fetchAllRecords(cfg){
+    let all = [];
+    let offset = null;
+    do {
+      const url = new URL(`https://api.airtable.com/v0/${cfg.baseId}/${encodeURIComponent(cfg.tableName)}`);
+      url.searchParams.set("pageSize", "100");
+      if(offset) url.searchParams.set("offset", offset);
+      const res = await fetch(url.toString(), { headers: airtableHeaders(cfg) });
+      if(!res.ok){
+        const errBody = await res.text();
+        throw new Error(`Airtable error ${res.status}: ${errBody}`);
+      }
+      const data = await res.json();
+      all = all.concat(data.records || []);
+      offset = data.offset || null;
+    } while(offset);
+    return all.filter(r => r.fields && r.fields.Name);
+  }
+
+  async function updateRecordStatus(cfg, recordId, status){
+    const url = `https://api.airtable.com/v0/${cfg.baseId}/${encodeURIComponent(cfg.tableName)}/${recordId}`;
+    const body = { fields: { "Status": status } };
+    if(status === "Owned"){
+      body.fields["Acquired Date"] = new Date().toISOString().slice(0,10);
+    }
+    const res = await fetch(url, { method:"PATCH", headers: airtableHeaders(cfg), body: JSON.stringify(body) });
+    if(!res.ok){
+      const errBody = await res.text();
+      throw new Error(`Airtable error ${res.status}: ${errBody}`);
+    }
+    return res.json();
+  }
+
+  // ---------- Rendering ----------
+  function fieldVal(rec, name){
+    const v = rec.fields[name];
+    if(v && typeof v === "object" && "name" in v) return v.name;
+    return v;
+  }
+
+  function matchesFilters(rec){
+    const status = (fieldVal(rec, "Status") || "Needed");
+    if(currentFilter === "owned" && status !== "Owned") return false;
+    if(currentFilter === "needed" && status !== "Needed") return false;
+    if(searchQuery){
+      const q = searchQuery.toLowerCase();
+      const name = (fieldVal(rec,"Name")||"").toLowerCase();
+      const set = (fieldVal(rec,"Set")||"").toLowerCase();
+      if(!name.includes(q) && !set.includes(q)) return false;
+    }
+    return true;
+  }
+
+  function groupBySet(list){
+    const groups = {};
+    list.forEach(r => {
+      const set = fieldVal(r,"Set") || "Unsorted";
+      if(!groups[set]) groups[set] = [];
+      groups[set].push(r);
+    });
+    return groups;
+  }
+
+  function pinCardHTML(rec){
+    const name = fieldVal(rec,"Name") || "Unnamed Pin";
+    const backer = fieldVal(rec,"Backer Type") || "";
+    const status = fieldVal(rec,"Status") || "Needed";
+    const photo = fieldVal(rec,"Photo Link");
+    const photoHTML = photo
+      ? `<img src="${escapeAttr(photo)}" loading="lazy" alt="${escapeAttr(name)}" onerror="this.parentElement.innerHTML='<span class=placeholder>🎪</span>'">`
+      : `<span class="placeholder">🎪</span>`;
+    return `
+      <div class="pin-card" data-id="${rec.id}">
+        <div class="pin-photo">
+          ${photoHTML}
+          <div class="status-dot ${status==='Owned'?'owned':'needed'}"></div>
+        </div>
+        <div class="pin-info">
+          <p class="pin-name">${escapeHtml(name)}</p>
+          <p class="pin-backer">${escapeHtml(backer || (status==='Owned'?'Owned':'Needed'))}</p>
+        </div>
+      </div>`;
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  }
+  function escapeAttr(s){ return escapeHtml(s); }
+
+  function render(){
+    const main = $("#mainContent");
+    const filtered = records.filter(matchesFilters);
+
+    updateProgress();
+
+    if(records.length === 0){
+      main.innerHTML = emptyStateHTML();
+      return;
+    }
+
+    if(filtered.length === 0){
+      main.innerHTML = `<div class="empty-state"><div class="big">🔍</div><div>No pins match your search.</div></div>`;
+      return;
+    }
+
+    if(currentView === "stats"){
+      main.innerHTML = statsHTML(filtered);
+      return;
+    }
+
+    if(currentView === "sets" || currentView === "all"){
+      const groups = groupBySet(filtered);
+      const setNames = Object.keys(groups).sort();
+      main.innerHTML = setNames.map(set => {
+        const items = groups[set];
+        const ownedCount = items.filter(r => fieldVal(r,"Status")==="Owned").length;
+        return `
+          <div class="set-group">
+            <div class="set-header">
+              <h2>${escapeHtml(set)}</h2>
+              <span class="set-count">${ownedCount}/${items.length}</span>
+            </div>
+            <div class="grid">
+              ${items.map(pinCardHTML).join("")}
+            </div>
+          </div>`;
+      }).join("");
+    }
+
+    $$(".pin-card").forEach(card => {
+      card.addEventListener("click", () => openDetail(card.dataset.id));
+    });
+  }
+
+  function emptyStateHTML(){
+    const cfg = getConfig();
+    if(!cfg.pat || !cfg.baseId){
+      return `
+        <div class="empty-state">
+          <div class="big">🏷️</div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">Welcome to The Case</div>
+          <div>Tap the ⚙️ icon above to connect your Airtable base and load your pin collection.</div>
+        </div>`;
+    }
+    return `<div class="empty-state"><div class="big">📭</div><div>No pins found. Pull to refresh or check your settings.</div></div>`;
+  }
+
+  function statsHTML(list){
+    const groups = groupBySet(list);
+    const setNames = Object.keys(groups).sort();
+    const total = list.length;
+    const owned = list.filter(r => fieldVal(r,"Status")==="Owned").length;
+    let html = `<div class="set-group"><div class="set-header"><h2>Overview</h2></div>
+      <div style="background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:16px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span style="color:var(--text-dim);font-size:13px;">Total Pins</span><strong>${total}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+          <span style="color:var(--text-dim);font-size:13px;">Owned</span><strong style="color:var(--owned);">${owned}</strong>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:var(--text-dim);font-size:13px;">Needed</span><strong style="color:var(--needed);">${total-owned}</strong>
+        </div>
+      </div>
+    </div>`;
+    html += `<div class="set-group"><div class="set-header"><h2>By Set</h2></div>`;
+    setNames.forEach(set => {
+      const items = groups[set];
+      const o = items.filter(r=>fieldVal(r,"Status")==="Owned").length;
+      const pct = Math.round((o/items.length)*100);
+      html += `
+        <div style="margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
+            <span>${escapeHtml(set)}</span><span style="color:var(--text-dim);">${o}/${items.length}</span>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>`;
+    });
+    html += `</div>`;
+    return html;
+  }
+
+  function updateProgress(){
+    const total = records.length;
+    const owned = records.filter(r => fieldVal(r,"Status")==="Owned").length;
+    const pct = total ? Math.round((owned/total)*100) : 0;
+    $("#progressLabel").textContent = `${owned} of ${total} owned`;
+    $("#progressPct").textContent = `${pct}%`;
+    $("#progressFill").style.width = pct + "%";
+  }
+
+  // ---------- Detail Sheet ----------
+  function openDetail(id){
+    const rec = records.find(r => r.id === id);
+    if(!rec) return;
+    activeRecord = rec;
+    const name = fieldVal(rec,"Name") || "Unnamed Pin";
+    const set = fieldVal(rec,"Set") || "—";
+    const backer = fieldVal(rec,"Backer Type") || "—";
+    const status = fieldVal(rec,"Status") || "Needed";
+    const acquired = fieldVal(rec,"Acquired Date") || "—";
+    const photo = fieldVal(rec,"Photo Link");
+    const notes = fieldVal(rec,"Notes");
+
+    $("#detailContent").innerHTML = `
+      <div class="sheet-photo">
+        ${photo ? `<img src="${escapeAttr(photo)}" alt="${escapeAttr(name)}" onerror="this.parentElement.innerHTML='<span class=placeholder>🎪</span>'">` : `<span class="placeholder">🎪</span>`}
+      </div>
+      <h3>${escapeHtml(name)}</h3>
+      <div class="sub">${escapeHtml(set)}</div>
+      <div class="field-row"><span class="label">Backer Type</span><span class="val">${escapeHtml(backer)}</span></div>
+      <div class="field-row"><span class="label">Set</span><span class="val">${escapeHtml(set)}</span></div>
+      <div class="field-row"><span class="label">Acquired</span><span class="val">${escapeHtml(acquired)}</span></div>
+      ${notes ? `<div class="notes-box">${escapeHtml(notes)}</div>` : ""}
+      <div class="status-toggle">
+        <button class="status-btn needed-btn ${status==='Needed'?'active':''}" id="markNeeded">Needed</button>
+        <button class="status-btn owned-btn ${status==='Owned'?'active':''}" id="markOwned">Owned ✓</button>
+      </div>
+    `;
+
+    $("#markOwned").addEventListener("click", () => setStatus("Owned"));
+    $("#markNeeded").addEventListener("click", () => setStatus("Needed"));
+
+    openSheet("detailSheet", "detailBackdrop");
+  }
+
+  async function setStatus(status){
+    const cfg = getConfig();
+    if(!activeRecord) return;
+    const prevStatus = fieldVal(activeRecord, "Status");
+    if(prevStatus === status) return;
+    activeRecord.fields.Status = { name: status };
+    render();
+    try {
+      await updateRecordStatus(cfg, activeRecord.id, status);
+      showToast(status === "Owned" ? "Marked as owned! 🎉" : "Marked as needed");
+      persistCache();
+      openDetail(activeRecord.id);
+    } catch(e){
+      showToast("Sync failed — check connection");
+      console.error(e);
+    }
+  }
+
+  // ---------- Sheets ----------
+  function openSheet(sheetId, backdropId){
+    $("#"+backdropId).classList.add("open");
+    $("#"+sheetId).classList.add("open");
+  }
+  function closeSheet(sheetId, backdropId){
+    $("#"+backdropId).classList.remove("open");
+    $("#"+sheetId).classList.remove("open");
+  }
+
+  $("#detailBackdrop").addEventListener("click", () => closeSheet("detailSheet","detailBackdrop"));
+  $("#settingsBackdrop").addEventListener("click", () => closeSheet("settingsSheet","settingsBackdrop"));
+  $("#settingsBtn").addEventListener("click", () => {
+    const cfg = getConfig();
+    $("#patInput").value = cfg.pat || "";
+    $("#baseIdInput").value = cfg.baseId || "";
+    $("#tableNameInput").value = cfg.tableName || "Pins";
+    openSheet("settingsSheet","settingsBackdrop");
+  });
+
+  $("#saveSettingsBtn").addEventListener("click", async () => {
+    const pat = $("#patInput").value.trim();
+    const baseId = $("#baseIdInput").value.trim();
+    const tableName = $("#tableNameInput").value.trim() || "Pins";
+    if(!pat || !baseId){
+      showToast("PAT and Base ID are required");
+      return;
+    }
+    setConfig({ pat, baseId, tableName });
+    closeSheet("settingsSheet","settingsBackdrop");
+    await loadData(true);
+  });
+
+  $("#clearSettingsBtn").addEventListener("click", () => {
+    localStorage.removeItem(CONFIG_KEY);
+    localStorage.removeItem(CACHE_KEY);
+    records = [];
+    render();
+    showToast("Cleared saved settings");
+  });
+
+  // ---------- Filters / search / tabs ----------
+  $("#filterRow").addEventListener("click", (e) => {
+    const chip = e.target.closest(".chip");
+    if(!chip) return;
+    $$(".chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    currentFilter = chip.dataset.filter;
+    render();
+  });
+
+  $$(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      $$(".tab").forEach(t => t.classList.remove("active"));
+      tab.classList.add("active");
+      currentView = tab.dataset.view;
+      render();
+    });
+  });
+
+  let searchDebounce;
+  $("#searchInput").addEventListener("input", (e) => {
+    clearTimeout(searchDebounce);
+    searchDebounce = setTimeout(() => {
+      searchQuery = e.target.value.trim();
+      render();
+    }, 150);
+  });
+
+  // ---------- Cache ----------
+  function persistCache(){
+    try { localStorage.setItem(CACHE_KEY, JSON.stringify(records)); } catch(e){}
+  }
+  function loadCache(){
+    try {
+      const c = JSON.parse(localStorage.getItem(CACHE_KEY));
+      if(Array.isArray(c)) return c;
+    } catch(e){}
+    return null;
+  }
+
+  // ---------- Data loading ----------
+  async function loadData(forceRemote){
+    const cfg = getConfig();
+    if(!cfg.pat || !cfg.baseId){
+      records = [];
+      render();
+      return;
+    }
+
+    if(!forceRemote){
+      const cached = loadCache();
+      if(cached){
+        records = cached;
+        render();
+      }
+    }
+
+    try {
+      const remote = await fetchAllRecords(cfg);
+      records = remote;
+      persistCache();
+      render();
+    } catch(e){
+      console.error(e);
+      if(records.length === 0){
+        $("#mainContent").innerHTML = `
+          <div class="empty-state">
+            <div class="big">⚠️</div>
+            <div style="font-weight:700;color:var(--text);margin-bottom:6px;">Couldn't connect to Airtable</div>
+            <div>${escapeHtml(e.message || "Check your token and Base ID in Settings.")}</div>
+          </div>`;
+      } else {
+        showToast("Using cached data — sync failed");
+      }
+    }
+  }
+
+  // ---------- Init ----------
+  document.addEventListener("DOMContentLoaded", () => {
+    loadData(false);
+  });
+
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+    });
+  }
+})();
+</script>
+</body>
+</html>
