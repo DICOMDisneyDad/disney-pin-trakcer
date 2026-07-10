@@ -2,9 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <title>The Case — Disney Pin Tracker</title>
 <meta name="theme-color" content="#1b1330">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The Case">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236c4fd6'/%3E%3Ccircle cx='50' cy='30' r='16' fill='%23ffd166'/%3E%3Ccircle cx='30' cy='16' r='9' fill='%23ffd166'/%3E%3Ccircle cx='70' cy='16' r='9' fill='%23ffd166'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236c4fd6'/%3E%3Ccircle cx='50' cy='30' r='16' fill='%23ffd166'/%3E%3Ccircle cx='30' cy='16' r='9' fill='%23ffd166'/%3E%3Ccircle cx='70' cy='16' r='9' fill='%23ffd166'/%3E%3C/svg%3E">
@@ -26,15 +30,36 @@
   --safe-bottom:env(safe-area-inset-bottom);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;overflow-x:hidden;width:100%;}
 body{
   min-height:100vh;
+  min-height:100dvh;
   padding-bottom:calc(78px + var(--safe-bottom));
   background:
     radial-gradient(circle at 10% 0%, rgba(139,107,240,0.25), transparent 45%),
     radial-gradient(circle at 90% 10%, rgba(255,209,102,0.12), transparent 40%),
     var(--bg);
+  position:relative;
 }
+button,.chip,.tab,.pin-card,input{touch-action:manipulation;}
+
+/* ---------- decorative: twinkle sparkles ---------- */
+@keyframes twinkle{
+  0%,100%{opacity:.15;transform:scale(.7) rotate(0deg);}
+  50%{opacity:.85;transform:scale(1.15) rotate(25deg);}
+}
+.sparkle-field{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;}
+.sparkle-field .tw{position:absolute;color:var(--accent-2);font-size:13px;animation:twinkle 3.6s ease-in-out infinite;filter:drop-shadow(0 0 3px rgba(255,209,102,0.6));}
+
+/* ---------- decorative: confetti burst ---------- */
+.confetti-layer{position:fixed;inset:0;pointer-events:none;z-index:80;overflow:hidden;}
+.confetti-layer span{position:absolute;top:-8%;font-size:20px;will-change:transform,opacity;animation:confettiFall 1.5s ease-in forwards;}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg);opacity:1;}
+  100%{transform:translateY(115vh) rotate(400deg);opacity:0;}
+}
+
 header.topbar{
   position:sticky; top:0; z-index:20;
   padding:calc(14px + var(--safe-top)) 16px 12px;
@@ -42,38 +67,54 @@ header.topbar{
   backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
   border-bottom:1px solid var(--card-border);
+  isolation:isolate;
 }
-.topbar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+.topbar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;position:relative;z-index:1;}
 .brand{display:flex;align-items:center;gap:10px;}
-.brand-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(145deg,var(--accent),#5a3fc0);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 4px 14px rgba(139,107,240,0.4);}
+.brand-mark{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 4px 14px rgba(139,107,240,0.45);
+  animation:earsPop .6s cubic-bezier(.34,1.56,.64,1);
+}
+.brand-mark svg{display:block;width:100%;height:100%;}
+@keyframes earsPop{0%{transform:scale(.4) rotate(-20deg);opacity:0;}100%{transform:scale(1) rotate(0deg);opacity:1;}}
 .brand h1{font-size:17px;margin:0;font-weight:700;letter-spacing:0.2px;}
 .brand small{display:block;color:var(--text-dim);font-size:11px;font-weight:500;}
 .icon-btn{
-  width:38px;height:38px;border-radius:12px;border:1px solid var(--card-border);
-  background:var(--card); color:var(--text); font-size:18px;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  width:44px;height:44px;border-radius:14px;border:1px solid var(--card-border);
+  background:var(--card); color:var(--text); font-size:19px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;
 }
 .icon-btn:active{transform:scale(0.94);}
 
-.progress-wrap{margin-top:14px;}
+.progress-wrap{margin-top:14px;position:relative;z-index:1;}
 .progress-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--text-dim);margin-bottom:6px;}
-.progress-bar{height:8px;border-radius:99px;background:rgba(255,255,255,0.08);overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--owned),#22c55e);border-radius:99px;transition:width .4s ease;}
+.progress-bar{height:9px;border-radius:99px;background:rgba(255,255,255,0.08);overflow:hidden;position:relative;}
+.progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--owned),#22c55e);border-radius:99px;transition:width .4s ease;
+  position:relative;overflow:hidden;
+}
+.progress-fill::after{
+  content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(115deg,rgba(255,255,255,0.35) 0 6px,transparent 6px 14px);
+  animation:shimmerMove 2.4s linear infinite;
+}
+@keyframes shimmerMove{0%{transform:translateX(-30px);}100%{transform:translateX(30px);}}
 
-.search-row{margin-top:12px;display:flex;gap:8px;}
+.search-row{margin-top:12px;display:flex;gap:8px;position:relative;z-index:1;}
 .search-box{
   flex:1;display:flex;align-items:center;gap:8px;background:var(--card);
-  border:1px solid var(--card-border);border-radius:12px;padding:9px 12px;
+  border:1px solid var(--card-border);border-radius:12px;padding:10px 12px;
 }
 .search-box input{
-  flex:1;border:none;background:transparent;color:var(--text);font-size:15px;outline:none;
+  flex:1;border:none;background:transparent;color:var(--text);font-size:16px;outline:none;
 }
 .search-box input::placeholder{color:var(--text-dim);}
 
-.filter-row{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;}
+.filter-row{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none;position:relative;z-index:1;}
 .filter-row::-webkit-scrollbar{display:none;}
 .chip{
-  flex:none;padding:7px 14px;border-radius:99px;font-size:13px;font-weight:600;
+  flex:none;padding:8px 15px;border-radius:99px;font-size:13px;font-weight:600;
   background:var(--card);border:1px solid var(--card-border);color:var(--text-dim);cursor:pointer;white-space:nowrap;
 }
 .chip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
@@ -87,14 +128,19 @@ main{padding:16px;max-width:720px;margin:0 auto;}
 .set-header h2{font-size:15px;margin:0;font-weight:700;color:var(--text);}
 .set-count{font-size:12px;color:var(--text-dim);font-weight:600;background:rgba(255,255,255,0.06);padding:3px 9px;border-radius:99px;}
 
+.divider-sparkle{display:flex;align-items:center;gap:8px;margin:2px 0 14px;color:var(--accent-2);opacity:0.55;font-size:11px;}
+.divider-sparkle::before,.divider-sparkle::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--card-border),transparent);}
+
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
 @media (min-width:480px){.grid{grid-template-columns:repeat(3,1fr);}}
+@media (min-width:680px){.grid{grid-template-columns:repeat(4,1fr);}}
 
 .pin-card{
   background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);
-  overflow:hidden;position:relative;cursor:pointer;transition:transform .15s ease, border-color .15s ease;
+  overflow:hidden;position:relative;cursor:pointer;transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
 }
 .pin-card:active{transform:scale(0.97);}
+.pin-card.is-owned{box-shadow:0 0 0 1px rgba(74,222,128,0.35), 0 4px 16px rgba(74,222,128,0.12);}
 .pin-photo{
   width:100%;aspect-ratio:1/1;background:linear-gradient(145deg,#2a2050,#1a1436);
   display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;
@@ -102,15 +148,54 @@ main{padding:16px;max-width:720px;margin:0 auto;}
 .pin-photo img{width:100%;height:100%;object-fit:cover;display:block;}
 .pin-photo .placeholder{font-size:26px;opacity:0.35;}
 .status-dot{
-  position:absolute;top:8px;right:8px;width:11px;height:11px;border-radius:50%;
+  position:absolute;top:8px;right:8px;width:12px;height:12px;border-radius:50%;
   box-shadow:0 0 0 3px rgba(0,0,0,0.35);
 }
 .status-dot.owned{background:var(--owned);}
 .status-dot.needed{background:var(--needed);}
+.ticket-tear{
+  height:0;border-top:2px dashed var(--card-border);position:relative;
+}
+.ticket-tear::before,.ticket-tear::after{
+  content:"";position:absolute;top:-6px;width:12px;height:12px;border-radius:50%;background:var(--bg);
+}
+.ticket-tear::before{left:-6px;}
+.ticket-tear::after{right:-6px;}
 .pin-info{padding:9px 10px 11px;}
 .pin-name{font-size:13px;font-weight:600;line-height:1.25;margin:0 0 3px;color:var(--text);
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .pin-backer{font-size:11px;color:var(--text-dim);margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.set-list{display:flex;flex-direction:column;gap:10px;}
+.set-card{
+  display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--card-border);
+  border-radius:16px;padding:12px;cursor:pointer;position:relative;
+}
+.set-card:active{transform:scale(0.98);}
+.set-card.is-complete{box-shadow:0 0 0 1px rgba(255,209,102,0.4), 0 4px 16px rgba(255,209,102,0.12);}
+.set-thumb{
+  width:56px;height:56px;border-radius:12px;overflow:hidden;flex-shrink:0;
+  background:linear-gradient(145deg,#2a2050,#1a1436);display:flex;align-items:center;justify-content:center;
+}
+.set-thumb img{width:100%;height:100%;object-fit:cover;}
+.set-thumb .placeholder{font-size:22px;opacity:0.4;}
+.set-card-body{flex:1;min-width:0;}
+.set-card-title{font-size:14px;font-weight:700;margin:0 0 4px;color:var(--text);
+  display:flex;align-items:center;gap:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.set-card-sub{font-size:11.5px;color:var(--text-dim);margin:0 0 6px;}
+.set-card-chevron{color:var(--text-dim);font-size:18px;flex-shrink:0;}
+.complete-badge{
+  font-size:10px;font-weight:700;color:#3a2a05;background:var(--accent-2);
+  padding:2px 7px;border-radius:99px;white-space:nowrap;
+}
+
+.sets-banner{text-align:center;padding:10px 4px 18px;position:relative;}
+.sets-banner svg{width:100%;max-width:260px;height:auto;opacity:0.5;margin-bottom:4px;}
+.sets-banner .cap{font-size:13px;color:var(--text-dim);font-weight:600;letter-spacing:0.3px;}
+
+.subview-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;}
+.subview-header h2{font-size:18px;margin:0;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.subview-header .set-progress-mini{font-size:12px;color:var(--text-dim);font-weight:600;}
 
 .empty-state, .loading-state{
   text-align:center;padding:60px 20px;color:var(--text-dim);
@@ -131,7 +216,7 @@ nav.tabbar{
 }
 .tab{
   display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--text-dim);
-  font-size:11px;font-weight:600;background:none;border:none;cursor:pointer;flex:1;
+  font-size:11px;font-weight:600;background:none;border:none;cursor:pointer;flex:1;min-height:44px;justify-content:center;
 }
 .tab .ic{font-size:19px;}
 .tab.active{color:var(--accent-2);}
@@ -146,16 +231,24 @@ nav.tabbar{
   background:var(--bg-elevated);border-radius:20px 20px 0 0;
   border-top:1px solid var(--card-border);
   padding:18px 18px calc(22px + var(--safe-bottom));
-  max-height:88vh;overflow-y:auto;
+  max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;
   transform:translateY(100%);transition:transform .25s cubic-bezier(.32,.72,0,1);
 }
 .sheet.open{transform:translateY(0);}
 .sheet-handle{width:38px;height:4px;background:var(--card-border);border-radius:99px;margin:0 auto 16px;}
 .sheet h3{margin:0 0 4px;font-size:19px;}
 .sheet .sub{color:var(--text-dim);font-size:13px;margin-bottom:16px;}
-.sheet-photo{width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:linear-gradient(145deg,#2a2050,#1a1436);display:flex;align-items:center;justify-content:center;margin-bottom:16px;}
-.sheet-photo img{width:100%;height:100%;object-fit:cover;}
+.sheet-photo{
+  width:100%;aspect-ratio:1/1;border-radius:14px;overflow:hidden;
+  background:linear-gradient(145deg,#2a2050,#1a1436);display:flex;align-items:center;justify-content:center;margin-bottom:8px;
+  border:2px dashed rgba(255,209,102,0.35);padding:4px;
+}
+.sheet-photo img{width:100%;height:100%;object-fit:cover;border-radius:10px;}
 .sheet-photo .placeholder{font-size:44px;opacity:0.3;}
+.sheet-ticket-tear{height:0;border-top:2px dashed var(--card-border);margin:0 -2px 16px;position:relative;}
+.sheet-ticket-tear::before,.sheet-ticket-tear::after{content:"";position:absolute;top:-7px;width:14px;height:14px;border-radius:50%;background:var(--bg-elevated);}
+.sheet-ticket-tear::before{left:-16px;}
+.sheet-ticket-tear::after{right:-16px;}
 .field-row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--card-border);font-size:14px;}
 .field-row:last-of-type{border-bottom:none;}
 .field-row .label{color:var(--text-dim);}
@@ -163,24 +256,24 @@ nav.tabbar{
 .notes-box{margin-top:14px;padding:12px;background:var(--card);border-radius:12px;font-size:13px;color:var(--text-dim);line-height:1.5;}
 .status-toggle{display:flex;gap:8px;margin-top:16px;}
 .status-btn{
-  flex:1;padding:12px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);
-  color:var(--text);font-size:14px;font-weight:700;cursor:pointer;
+  flex:1;padding:13px;border-radius:12px;border:1px solid var(--card-border);background:var(--card);
+  color:var(--text);font-size:14px;font-weight:700;cursor:pointer;min-height:46px;
 }
 .status-btn.owned-btn.active{background:var(--owned);border-color:var(--owned);color:#08240f;}
 .status-btn.needed-btn.active{background:var(--needed);border-color:var(--needed);color:#3a0621;}
 
 .settings-form label{display:block;font-size:12px;font-weight:700;color:var(--text-dim);margin:14px 0 6px;text-transform:uppercase;letter-spacing:0.4px;}
 .settings-form input, .settings-form textarea{
-  width:100%;padding:12px 13px;border-radius:12px;border:1px solid var(--card-border);
-  background:var(--card);color:var(--text);font-size:14px;outline:none;font-family:inherit;
+  width:100%;padding:13px;border-radius:12px;border:1px solid var(--card-border);
+  background:var(--card);color:var(--text);font-size:16px;outline:none;font-family:inherit;
 }
 .settings-form input:focus, .settings-form textarea:focus{border-color:var(--accent);}
 .btn-primary{
-  width:100%;margin-top:18px;padding:13px;border-radius:12px;border:none;
+  width:100%;margin-top:18px;padding:14px;border-radius:12px;border:none;min-height:48px;
   background:linear-gradient(135deg,var(--accent),#5a3fc0);color:#fff;font-size:15px;font-weight:700;cursor:pointer;
 }
 .btn-secondary{
-  width:100%;margin-top:10px;padding:12px;border-radius:12px;border:1px solid var(--card-border);
+  width:100%;margin-top:10px;padding:13px;border-radius:12px;border:1px solid var(--card-border);min-height:46px;
   background:transparent;color:var(--text-dim);font-size:14px;font-weight:600;cursor:pointer;
 }
 .help-text{font-size:12px;color:var(--text-dim);margin-top:6px;line-height:1.5;}
@@ -189,19 +282,32 @@ nav.tabbar{
   position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(20px);
   background:#111;color:#fff;padding:11px 18px;border-radius:99px;font-size:13px;font-weight:600;
   z-index:60;opacity:0;transition:all .25s ease;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,0.4);
+  max-width:88vw;text-align:center;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media (prefers-reduced-motion: reduce){
+  .sparkle-field .tw, .progress-fill::after, .brand-mark, .confetti-layer span{animation:none !important;}
+}
 </style>
 </head>
 <body>
 
 <header class="topbar">
+  <div class="sparkle-field" id="sparkleField" aria-hidden="true"></div>
   <div class="topbar-row">
     <div class="brand">
-      <div class="brand-mark">🏷️</div>
+      <div class="brand-mark">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#6c4fd6"/>
+          <circle cx="50" cy="30" r="16" fill="#ffd166"/>
+          <circle cx="30" cy="16" r="9" fill="#ffd166"/>
+          <circle cx="70" cy="16" r="9" fill="#ffd166"/>
+        </svg>
+      </div>
       <div>
         <h1>The Case</h1>
-        <small id="subtitle">Disney Pin Collection</small>
+        <small id="subtitle">✨ Disney Pin Collection ✨</small>
       </div>
     </div>
     <button class="icon-btn" id="settingsBtn" aria-label="Settings">⚙️</button>
@@ -232,13 +338,13 @@ nav.tabbar{
 <main id="mainContent">
   <div class="loading-state" id="loadingState">
     <div class="spinner"></div>
-    <div>Loading your collection…</div>
+    <div>Sprinkling some pixie dust…</div>
   </div>
 </main>
 
 <nav class="tabbar">
   <button class="tab active" data-view="all"><span class="ic">🗂️</span>All Pins</button>
-  <button class="tab" data-view="sets"><span class="ic">📦</span>By Set</button>
+  <button class="tab" data-view="sets"><span class="ic">🏰</span>By Set</button>
   <button class="tab" data-view="stats"><span class="ic">📊</span>Stats</button>
 </nav>
 
@@ -280,6 +386,7 @@ nav.tabbar{
   let records = [];
   let currentFilter = "all";
   let currentView = "all";
+  let selectedSet = null;
   let searchQuery = "";
   let activeRecord = null;
 
@@ -298,6 +405,43 @@ nav.tabbar{
     t.classList.add("show");
     clearTimeout(t._timer);
     t._timer = setTimeout(()=>t.classList.remove("show"), ms || 2200);
+  }
+
+  // ---------- decorative: sparkle field ----------
+  function initSparkleField(){
+    const field = $("#sparkleField");
+    if(!field) return;
+    const glyphs = ["✦","⋆","✧","✨"];
+    const spots = [
+      {t:"10%", l:"8%"}, {t:"55%", l:"92%"}, {t:"20%", l:"48%"},
+      {t:"75%", l:"18%"}, {t:"40%", l:"78%"}, {t:"85%", l:"60%"}
+    ];
+    spots.forEach((s,i)=>{
+      const span = document.createElement("span");
+      span.className = "tw";
+      span.textContent = glyphs[i % glyphs.length];
+      span.style.top = s.t; span.style.left = s.l;
+      span.style.animationDelay = (i * 0.5) + "s";
+      span.style.fontSize = (11 + (i % 3) * 3) + "px";
+      field.appendChild(span);
+    });
+  }
+
+  // ---------- decorative: confetti burst ----------
+  function burstConfetti(){
+    const pieces = ["🎉","✨","⭐","💫","🌟"];
+    const layer = document.createElement("div");
+    layer.className = "confetti-layer";
+    for(let i=0;i<16;i++){
+      const span = document.createElement("span");
+      span.textContent = pieces[Math.floor(Math.random()*pieces.length)];
+      span.style.left = (Math.random()*94) + "%";
+      span.style.animationDelay = (Math.random()*0.35) + "s";
+      span.style.fontSize = (16 + Math.random()*12) + "px";
+      layer.appendChild(span);
+    }
+    document.body.appendChild(layer);
+    setTimeout(()=>layer.remove(), 2000);
   }
 
   // ---------- Airtable API ----------
@@ -373,18 +517,20 @@ nav.tabbar{
     const backer = fieldVal(rec,"Backer Type") || "";
     const status = fieldVal(rec,"Status") || "Needed";
     const photo = fieldVal(rec,"Photo Link");
+    const owned = status === "Owned";
     const photoHTML = photo
       ? `<img src="${escapeAttr(photo)}" loading="lazy" alt="${escapeAttr(name)}" onerror="this.parentElement.innerHTML='<span class=placeholder>🎪</span>'">`
       : `<span class="placeholder">🎪</span>`;
     return `
-      <div class="pin-card" data-id="${rec.id}">
+      <div class="pin-card ${owned ? 'is-owned' : ''}" data-id="${rec.id}">
         <div class="pin-photo">
           ${photoHTML}
-          <div class="status-dot ${status==='Owned'?'owned':'needed'}"></div>
+          <div class="status-dot ${owned?'owned':'needed'}"></div>
         </div>
+        <div class="ticket-tear"></div>
         <div class="pin-info">
           <p class="pin-name">${escapeHtml(name)}</p>
-          <p class="pin-backer">${escapeHtml(backer || (status==='Owned'?'Owned':'Needed'))}</p>
+          <p class="pin-backer">${escapeHtml(backer || (owned?'Owned':'Needed'))}</p>
         </div>
       </div>`;
   }
@@ -394,9 +540,26 @@ nav.tabbar{
   }
   function escapeAttr(s){ return escapeHtml(s); }
 
+  function castleSvg(){
+    return `<svg viewBox="0 0 260 120" xmlns="http://www.w3.org/2000/svg" fill="var(--accent-2)">
+      <rect x="20" y="70" width="220" height="40" rx="2"/>
+      <rect x="40" y="45" width="26" height="65"/>
+      <polygon points="53,20 68,45 38,45"/>
+      <rect x="194" y="45" width="26" height="65"/>
+      <polygon points="207,20 222,45 192,45"/>
+      <rect x="100" y="30" width="30" height="80"/>
+      <polygon points="115,2 133,30 97,30"/>
+      <rect x="113" y="2" width="4" height="16"/>
+      <polygon points="117,2 130,8 117,14"/>
+      <rect x="30" y="95" width="10" height="15"/>
+      <rect x="76" y="95" width="10" height="15"/>
+      <rect x="184" y="95" width="10" height="15"/>
+      <rect x="230" y="95" width="10" height="15"/>
+    </svg>`;
+  }
+
   function render(){
     const main = $("#mainContent");
-    const filtered = records.filter(matchesFilters);
 
     updateProgress();
 
@@ -405,38 +568,103 @@ nav.tabbar{
       return;
     }
 
+    const filtered = records.filter(matchesFilters);
+
+    if(currentView === "stats"){
+      main.innerHTML = statsHTML(filtered);
+      attachPinCardListeners();
+      return;
+    }
+
+    if(currentView === "sets" && !selectedSet){
+      main.innerHTML = setsListHTML(filtered);
+      $$(".set-card").forEach(card => {
+        card.addEventListener("click", () => { selectedSet = card.dataset.set; render(); });
+      });
+      return;
+    }
+
+    if(currentView === "sets" && selectedSet){
+      const items = filtered.filter(r => (fieldVal(r,"Set") || "Unsorted") === selectedSet);
+      const ownedCount = items.filter(r => fieldVal(r,"Status")==="Owned").length;
+      main.innerHTML = `
+        <div class="subview-header">
+          <button class="icon-btn" id="backToSets" aria-label="Back to sets">←</button>
+          <h2>${escapeHtml(selectedSet)}</h2>
+          <span class="set-progress-mini">${ownedCount}/${items.length}</span>
+        </div>
+        ${items.length ? `<div class="grid">${items.map(pinCardHTML).join("")}</div>` : `<div class="empty-state"><div class="big">🔍</div><div>No pins match your search here.</div></div>`}
+      `;
+      $("#backToSets").addEventListener("click", () => { selectedSet = null; render(); });
+      attachPinCardListeners();
+      return;
+    }
+
+    // currentView === "all"
     if(filtered.length === 0){
       main.innerHTML = `<div class="empty-state"><div class="big">🔍</div><div>No pins match your search.</div></div>`;
       return;
     }
+    const groups = groupBySet(filtered);
+    const setNames = Object.keys(groups).sort();
+    main.innerHTML = setNames.map((set, idx) => {
+      const items = groups[set];
+      const ownedCount = items.filter(r => fieldVal(r,"Status")==="Owned").length;
+      return `
+        <div class="set-group">
+          ${idx > 0 ? `<div class="divider-sparkle">✦</div>` : ``}
+          <div class="set-header">
+            <h2>${escapeHtml(set)}</h2>
+            <span class="set-count">${ownedCount}/${items.length}</span>
+          </div>
+          <div class="grid">
+            ${items.map(pinCardHTML).join("")}
+          </div>
+        </div>`;
+    }).join("");
+    attachPinCardListeners();
+  }
 
-    if(currentView === "stats"){
-      main.innerHTML = statsHTML(filtered);
-      return;
-    }
-
-    if(currentView === "sets" || currentView === "all"){
-      const groups = groupBySet(filtered);
-      const setNames = Object.keys(groups).sort();
-      main.innerHTML = setNames.map(set => {
-        const items = groups[set];
-        const ownedCount = items.filter(r => fieldVal(r,"Status")==="Owned").length;
-        return `
-          <div class="set-group">
-            <div class="set-header">
-              <h2>${escapeHtml(set)}</h2>
-              <span class="set-count">${ownedCount}/${items.length}</span>
-            </div>
-            <div class="grid">
-              ${items.map(pinCardHTML).join("")}
-            </div>
-          </div>`;
-      }).join("");
-    }
-
+  function attachPinCardListeners(){
     $$(".pin-card").forEach(card => {
       card.addEventListener("click", () => openDetail(card.dataset.id));
     });
+  }
+
+  function setsListHTML(filtered){
+    const groups = groupBySet(filtered);
+    const setNames = Object.keys(groups).sort();
+    if(setNames.length === 0){
+      return `<div class="empty-state"><div class="big">🔍</div><div>No sets match your search.</div></div>`;
+    }
+    let html = `
+      <div class="sets-banner">
+        ${castleSvg()}
+        <div class="cap">✨ Browse Your Collection by Set ✨</div>
+      </div>
+      <div class="set-list">`;
+    setNames.forEach(set => {
+      const items = groups[set];
+      const owned = items.filter(r=>fieldVal(r,"Status")==="Owned").length;
+      const complete = owned === items.length && items.length > 0;
+      const cover = items.find(r => fieldVal(r,"Photo Link"));
+      const coverUrl = cover ? fieldVal(cover,"Photo Link") : null;
+      const pct = items.length ? Math.round((owned/items.length)*100) : 0;
+      html += `
+        <div class="set-card ${complete ? 'is-complete' : ''}" data-set="${escapeAttr(set)}">
+          <div class="set-thumb">
+            ${coverUrl ? `<img src="${escapeAttr(coverUrl)}" loading="lazy" alt="" onerror="this.parentElement.innerHTML='<span class=placeholder>🎠</span>'">` : `<span class="placeholder">🎠</span>`}
+          </div>
+          <div class="set-card-body">
+            <p class="set-card-title">${escapeHtml(set)} ${complete ? `<span class="complete-badge">🎉 Complete</span>` : ``}</p>
+            <p class="set-card-sub">${owned}/${items.length} owned</p>
+            <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          </div>
+          <div class="set-card-chevron">›</div>
+        </div>`;
+    });
+    html += `</div>`;
+    return html;
   }
 
   function emptyStateHTML(){
@@ -445,7 +673,7 @@ nav.tabbar{
       return `
         <div class="empty-state">
           <div class="big">🏷️</div>
-          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">Welcome to The Case</div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:6px;">Welcome to The Case ✨</div>
           <div>Tap the ⚙️ icon above to connect your Airtable base and load your pin collection.</div>
         </div>`;
     }
@@ -478,7 +706,7 @@ nav.tabbar{
       html += `
         <div style="margin-bottom:12px;">
           <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;">
-            <span>${escapeHtml(set)}</span><span style="color:var(--text-dim);">${o}/${items.length}</span>
+            <span>${escapeHtml(set)}${pct===100 ? ' 🎉' : ''}</span><span style="color:var(--text-dim);">${o}/${items.length}</span>
           </div>
           <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
         </div>`;
@@ -513,6 +741,7 @@ nav.tabbar{
       <div class="sheet-photo">
         ${photo ? `<img src="${escapeAttr(photo)}" alt="${escapeAttr(name)}" onerror="this.parentElement.innerHTML='<span class=placeholder>🎪</span>'">` : `<span class="placeholder">🎪</span>`}
       </div>
+      <div class="sheet-ticket-tear"></div>
       <h3>${escapeHtml(name)}</h3>
       <div class="sub">${escapeHtml(set)}</div>
       <div class="field-row"><span class="label">Backer Type</span><span class="val">${escapeHtml(backer)}</span></div>
@@ -540,7 +769,12 @@ nav.tabbar{
     render();
     try {
       await updateRecordStatus(cfg, activeRecord.id, status);
-      showToast(status === "Owned" ? "Marked as owned! 🎉" : "Marked as needed");
+      if(status === "Owned"){
+        showToast("Marked as owned! 🎉");
+        burstConfetti();
+      } else {
+        showToast("Marked as needed");
+      }
       persistCache();
       openDetail(activeRecord.id);
     } catch(e){
@@ -605,6 +839,7 @@ nav.tabbar{
       $$(".tab").forEach(t => t.classList.remove("active"));
       tab.classList.add("active");
       currentView = tab.dataset.view;
+      if(currentView !== "sets") selectedSet = null;
       render();
     });
   });
@@ -669,6 +904,7 @@ nav.tabbar{
 
   // ---------- Init ----------
   document.addEventListener("DOMContentLoaded", () => {
+    initSparkleField();
     loadData(false);
   });
 
