@@ -100,7 +100,21 @@ header.topbar{
 }
 .chip.active{background:var(--accent);color:#fff;border-color:var(--accent);}
 
-main{padding:16px;max-width:720px;margin:0 auto;}
+.wave-tabs{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.wave-tabs::-webkit-scrollbar{display:none;}
+.wave-tab{
+  flex:none;padding:8px 16px;border-radius:99px;font-size:13px;font-weight:700;
+  background:var(--card);border:1px solid var(--card-border);color:var(--text-dim);cursor:pointer;white-space:nowrap;
+}
+.wave-tab.active{background:var(--accent-2);color:#241a00;border-color:var(--accent-2);}
+.wave-progress-wrap{
+  margin-bottom:18px;background:var(--card);border:1px solid var(--card-border);
+  border-radius:14px;padding:12px 14px;
+}
+.wave-progress-wrap .progress-labels{margin-bottom:8px;}
+.wave-swipe-hint{text-align:center;font-size:11px;color:var(--text-dim);margin:-6px 0 16px;opacity:0.7;}
+
+main{padding:16px;max-width:720px;margin:0 auto;touch-action:pan-y;}
 .set-group{margin-bottom:22px;}
 .set-header{
   display:flex;align-items:center;justify-content:space-between;
@@ -263,7 +277,7 @@ nav.tabbar{
 
 <nav class="tabbar">
   <button class="tab active" data-view="all"><span class="ic">🗂️</span>All Pins</button>
-  <button class="tab" data-view="sets"><span class="ic">📦</span>By Set</button>
+  <button class="tab" data-view="sets"><span class="ic">🌊</span>By Wave</button>
   <button class="tab" data-view="stats"><span class="ic">📊</span>Stats</button>
 </nav>
 
@@ -305,6 +319,7 @@ nav.tabbar{
   let records = [];
   let currentFilter = "all";
   let currentView = "all";
+  let currentWave = null;
   let searchQuery = "";
   let activeRecord = null;
 
@@ -409,6 +424,21 @@ nav.tabbar{
     return groups;
   }
 
+  // A "wave" is the broader release grouping a Set belongs to, e.g. a Set
+  // named "2026 Wave A - Ear Headbands" belongs to wave "2026 Wave A".
+  // Sets that don't follow that pattern (e.g. "Disneyland 70th Anniversary")
+  // are treated as their own standalone wave.
+  function getWaveName(setName){
+    const m = /^(\d{4}\s+Wave\s+[AB])\b/i.exec(setName || "");
+    return m ? m[1] : (setName || "Unsorted");
+  }
+
+  function getAllWaves(){
+    const waves = new Set();
+    records.forEach(r => waves.add(getWaveName(fieldVal(r,"Set") || "Unsorted")));
+    return Array.from(waves).sort();
+  }
+
   function pinCardHTML(rec){
     const name = fieldVal(rec,"Name") || "Unnamed Pin";
     const backer = fieldVal(rec,"Backer Type") || "";
@@ -456,7 +486,12 @@ nav.tabbar{
       return;
     }
 
-    if(currentView === "sets" || currentView === "all"){
+    if(currentView === "sets"){
+      renderWaveView(filtered);
+      return;
+    }
+
+    if(currentView === "all"){
       const groups = groupBySet(filtered);
       const setNames = Object.keys(groups).sort();
       main.innerHTML = setNames.map(set => {
@@ -478,6 +513,112 @@ nav.tabbar{
     $$(".pin-card").forEach(card => {
       card.addEventListener("click", () => openDetail(card.dataset.id));
     });
+  }
+
+  // Renders the "By Wave" tab: a swipeable/tappable strip of wave names,
+  // each showing only that wave's own progress bar and pins (grouped into
+  // their sub-series sections below it).
+  function renderWaveView(filtered){
+    const main = $("#mainContent");
+    const waves = getAllWaves();
+
+    if(waves.length === 0){
+      main.innerHTML = `<div class="empty-state"><div class="big">🌊</div><div>No waves found.</div></div>`;
+      return;
+    }
+    if(!currentWave || !waves.includes(currentWave)){
+      currentWave = waves[0];
+    }
+
+    const waveItems = filtered.filter(r => getWaveName(fieldVal(r,"Set") || "Unsorted") === currentWave);
+    const ownedCount = waveItems.filter(r => fieldVal(r,"Status")==="Owned").length;
+    const pct = waveItems.length ? Math.round((ownedCount/waveItems.length)*100) : 0;
+
+    const tabsHTML = `<div class="wave-tabs" id="waveTabs">` +
+      waves.map(w => `<div class="wave-tab ${w===currentWave?'active':''}" data-wave="${escapeAttr(w)}">${escapeHtml(w)}</div>`).join("") +
+      `</div>`;
+
+    const progressHTML = `
+      <div class="wave-progress-wrap">
+        <div class="progress-labels">
+          <span>${ownedCount} of ${waveItems.length} owned</span>
+          <span>${pct}%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      </div>`;
+
+    const hintHTML = waves.length > 1 ? `<div class="wave-swipe-hint">Swipe left/right to switch waves</div>` : "";
+
+    let bodyHTML;
+    if(waveItems.length === 0){
+      bodyHTML = `<div class="empty-state"><div class="big">🔍</div><div>No pins match in this wave.</div></div>`;
+    } else {
+      const subGroups = groupBySet(waveItems);
+      const subNames = Object.keys(subGroups).sort();
+      bodyHTML = subNames.map(set => {
+        const items = subGroups[set];
+        const o = items.filter(r => fieldVal(r,"Status")==="Owned").length;
+        return `
+          <div class="set-group">
+            <div class="set-header">
+              <h2>${escapeHtml(set)}</h2>
+              <span class="set-count">${o}/${items.length}</span>
+            </div>
+            <div class="grid">
+              ${items.map(pinCardHTML).join("")}
+            </div>
+          </div>`;
+      }).join("");
+    }
+
+    main.innerHTML = tabsHTML + progressHTML + hintHTML + bodyHTML;
+
+    $$(".pin-card").forEach(card => {
+      card.addEventListener("click", () => openDetail(card.dataset.id));
+    });
+
+    const waveTabsEl = $("#waveTabs");
+    if(waveTabsEl){
+      waveTabsEl.addEventListener("click", (e) => {
+        const tab = e.target.closest(".wave-tab");
+        if(!tab) return;
+        currentWave = tab.dataset.wave;
+        render();
+        waveTabsEl.parentElement.querySelector(`[data-wave="${CSS.escape(currentWave)}"]`)?.scrollIntoView({ behavior:"smooth", inline:"center", block:"nearest" });
+      });
+      const activeTab = waveTabsEl.querySelector(".wave-tab.active");
+      if(activeTab) activeTab.scrollIntoView({ inline:"center", block:"nearest" });
+    }
+  }
+
+  // Swipe left/right anywhere in the main content to move between waves,
+  // active only while the "By Wave" tab is selected.
+  function initWaveSwipe(){
+    const main = $("#mainContent");
+    let startX = 0, startY = 0, tracking = false;
+    main.addEventListener("touchstart", (e) => {
+      if(currentView !== "sets" || e.touches.length !== 1) return;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      tracking = true;
+    }, { passive:true });
+    main.addEventListener("touchend", (e) => {
+      if(!tracking) return;
+      tracking = false;
+      if(currentView !== "sets") return;
+      const dx = e.changedTouches[0].clientX - startX;
+      const dy = e.changedTouches[0].clientY - startY;
+      if(Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      const waves = getAllWaves();
+      const idx = waves.indexOf(currentWave);
+      if(dx < 0 && idx < waves.length - 1){
+        currentWave = waves[idx+1];
+        render();
+      } else if(dx > 0 && idx > 0){
+        currentWave = waves[idx-1];
+        render();
+      }
+    }, { passive:true });
   }
 
   function emptyStateHTML(){
@@ -711,6 +852,7 @@ nav.tabbar{
   // ---------- Init ----------
   document.addEventListener("DOMContentLoaded", () => {
     initBackgroundPhoto();
+    initWaveSwipe();
     loadData(false);
   });
 
